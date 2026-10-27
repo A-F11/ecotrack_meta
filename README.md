@@ -12,9 +12,9 @@ dos veces sobre el mismo `ConsumosViewModel`:
 | Verificación | Resultado |
 |---|---|
 | `flutter analyze` | Sin issues |
+| Pruebas oficiales (`test/`) | **35 / 35 en verde** |
 | Pruebas locales (`test_local/`) | **40 / 40 en verde** |
-| Pruebas oficiales del kit (`kit_alumno/`) | Pendientes: el kit no está en el equipo |
-| `verificar_estado.sh` | Pendiente junto con el kit |
+| `bash verificar_estado.sh` | **Todo OK** |
 
 ## Estructura
 
@@ -37,7 +37,9 @@ lib/
 └── main_change_notifier.dart        Arranca la variante A (ChangeNotifier)
 docs/
 └── estado.md                        Comparación de gestores con evidencia
+test/                                Kit oficial (35 pruebas)
 test_local/                          Pruebas de verificación propias (40)
+verificar_estado.sh                  Verificación de capas y cableado
 ```
 
 ## Cómo correr
@@ -51,18 +53,13 @@ flutter run
 # Variante A · ChangeNotifier puro
 flutter run -t lib/main_change_notifier.dart
 
-# Verificación local
+# Verificación oficial (35 pruebas del kit)
+flutter test -r expanded
+bash verificar_estado.sh
+
+# Verificación local adicional (40 pruebas propias)
 flutter analyze
 flutter test test_local -r expanded
-```
-
-Cuando esté disponible el kit oficial:
-
-```bash
-cp -R ../kit_alumno/test .
-cp ../kit_alumno/verificar_estado.sh .
-flutter test
-bash verificar_estado.sh
 ```
 
 ## Pruebas locales
@@ -146,16 +143,24 @@ del kit. Sirven como evidencia de que cada etapa cumple los contratos de la pág
 00:02 +40: All tests passed!
 ```
 
-## Pruebas oficiales pendientes
+## Pruebas oficiales
 
-| Archivo del kit | Pruebas esperadas |
-|---|---|
-| `test/etapa1_dominio_test.dart` | 10 |
-| `test/etapa2_datos_test.dart` | 4 |
-| `test/etapa3_viewmodel_test.dart` | 11 |
-| `test/etapa4_change_notifier_test.dart` | 5 |
-| `test/etapa5_provider_test.dart` | 5 |
-| **Total** | **35** |
+| Archivo del kit | Pruebas | Resultado |
+|---|---|---|
+| `test/etapa1_dominio_test.dart` | 10 | ✅ |
+| `test/etapa2_datos_test.dart` | 4 | ✅ |
+| `test/etapa3_viewmodel_test.dart` | 11 | ✅ |
+| `test/etapa4_change_notifier_test.dart` | 5 | ✅ |
+| `test/etapa5_provider_test.dart` | 5 | ✅ |
+| **Total** | **35** | **35 / 35 en verde** |
+
+```
+00:02 +35: All tests passed!
+```
+
+`verificar_estado.sh` también sale completo en **OK**: capas separadas, ViewModel con
+`ChangeNotifier`, vistas sin provider/ViewModel/datos, variante A por constructor y
+variante B con `context.watch`/`context.read`.
 
 ## Commits por etapa
 
@@ -168,6 +173,7 @@ del kit. Sirven como evidencia de que cada etapa cumple los contratos de la pág
 | 4 | `feat(variante-a): vistas tontas y cableado con ChangeNotifier` |
 | 5 | `feat(variante-b): cableado con provider sobre el mismo ViewModel` |
 | 6 | `docs: comparación de gestores con evidencia` |
+| Kit | `test: incorpora kit oficial de pruebas` |
 
 ## Notas de implementación
 
