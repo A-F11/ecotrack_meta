@@ -46,6 +46,3 @@ app.*.map.json
 
 # Widget Preview related
 .widget_preview/
-
-# Pruebas temporales locales (el kit oficial vive en test/)
-/test_local/
